@@ -1,19 +1,28 @@
 name: Build APK
-on: [push, workflow_dispatch]
+
+on:
+  push:
+  workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-java@v4
-        with: { distribution: temurin, java-version: 17 }
+        with:
+          distribution: temurin
+          java-version: 17
+
       - uses: gradle/actions/setup-gradle@v4
-        with: { gradle-version: "8.7" }
-      - name: Build
-        run: |
-          unzip -oq BankSms.zip -d tmp
-          cp -r tmp/BankSms/app .
-          ls -R app | head -30
-          gradle assembleDebug --console=plain
+        with:
+          gradle-version: 8.7
+
+      - name: Build debug APK
+        run: gradle :app:assembleDebug
+
       - uses: actions/upload-artifact@v4
-        with: { name: app-debug, path: app/build/outputs/apk/debug/app-debug.apk }
+        with:
+          name: app-debug
+          path: app/build/outputs/apk/debug/*.apk

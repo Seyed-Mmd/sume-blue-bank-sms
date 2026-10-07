@@ -19,7 +19,7 @@ jobs:
         with:
           gradle-version: "8.7"
 
-      - name: Unzip project and build
+      - name: Unzip project and build (signed release)
         run: |
           Z=$(ls *.zip 2>/dev/null | head -1)
           if [ -z "$Z" ]; then echo "هیچ فایل zip در ریشه repository پیدا نشد"; exit 1; fi
@@ -29,9 +29,9 @@ jobs:
           S=$(find work -name settings.gradle.kts | head -1)
           if [ -z "$S" ]; then echo "settings.gradle.kts داخل zip نیست"; exit 1; fi
           cd "$(dirname "$S")"
-          gradle assembleDebug --console=plain
+          gradle assembleRelease --console=plain
 
       - uses: actions/upload-artifact@v4
         with:
           name: BankSms-apk
-          path: work/**/app-debug.apk
+          path: work/**/app-release.apk
